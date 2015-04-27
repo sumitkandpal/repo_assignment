@@ -1,0 +1,28 @@
+Compilation:
+i) I have complied my code in Ubuntu with g++  with the below command:
+g++ -std=c++11 -pthread server.cpp -o server
+ii) To run type: ./server
+
+
+Explaination:
+i) For each new client a separate thread will be created which will serve the client.
+ii) I have used unordered_map from c++ STL library to implement the hash table where client will set  and retrieve keys and corresponding values.
+iii) As multiple therad will read and modify the hash table I have used pthread mutexes and condition variables to protect the hash table
+iv) Muliple readers can read the hash table  at a time but only one writer can modify it at a time.If the writer is modifying the table then readers and other writers should wait on a conditional variable.
+v)I have given more priority to writers than readers as I want to give readers always access to updated data.
+vi) If the readers are reading and a new writer comes than we will let the reader finish reading but will block any new readers.When
+the exisitng readers are finished .The writes will be woken up to write.
+vii)When the writers is finished writing it will check for any waiting writers if there is any then wake one of them otherwise wake up the waiting readers.Here again priority is giver to writers
+viii)Drawback of above approach that readers can starve.If the writers can keep on coming than readers wont have chance to run.
+
+Limitation:
+i) No support for authentication by username and password
+ii)more robust logic to handle frame boundries if we recive packet across multiple recv
+iii) If you stop the server and run again sometimes there is a bind error so you have close the terminal and start again to resolve. it.I am using socket option to reuse address but still it sometimes refuse to bind.
+
+Testing:
+Created a local client and ran multiple instances of it along with the client using python bmemcached library
+
+
+
+
